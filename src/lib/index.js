@@ -1,6 +1,7 @@
 // aqui exportaras las funciones que necesites
 
 export const myFunction = () => {
-  // aqui tu codigo
-  console.log('Hola mundo!');
+  window.addEventListener('hashchange', () => console.log(window.location.hash));
 };
+
+window.addEventListener('load', myFunction);
