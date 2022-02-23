@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles.css">
+    <title>Pet's Love</title>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="#/" style="display:none;">Ingresar</a></li>
+      <li><a href="#/signup" style="display:none;">Registrarse</a></li>
+      <li><a href="#/home" style="display:none;">Inicio</a></li>
+    </ul>
+  </nav>   
+  <section id="container"></section>
+
+
+
+  
+  <script src="https://www.gstatic.com/firebasejs/9.6.6/firebase-app.js"></script> <!--initializeApp-->
+  <script src="https://www.gstatic.com/firebasejs/9.6.6/firebase-database.js"></script>  <!--getDatabase, set, ref, update-->
+  <script src="https://www.gstatic.com/firebasejs/9.6.6/firebase-auth.js"></script> <!--getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut-->
+  <script src="https://www.gstatic.com/firebasejs/9.6.6/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.6/firebase-analytics.js"></script>  
+  
+  <script type="module" src="./main.js"></script>
+</body> 
+</html>
+
