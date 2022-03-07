@@ -1,13 +1,9 @@
-import { navBarTemplate } from "./navBar.js";
+import { navBarTemplate } from './navBar.js';
 
 export default () => {
-  const viewAdopcion = `${navBarTemplate}
-    <h2 class = "text-center">Lugares</h2>
-    <figure>
-        <img class = "image" src="http://olegit.com/bin/gifs/00/39/56.gif" alt= "Conejo codeando">
-    </figure>`;
+  const viewAdopcion = `${navBarTemplate}`;
   const divElemt = document.createElement('div');
   divElemt.classList.add('position');
   divElemt.innerHTML = viewAdopcion;
   return divElemt;
-}
+};

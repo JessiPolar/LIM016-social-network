@@ -1,58 +1,88 @@
 /* COMANDOS FIREBASE */
-
+// import { getDatabase, set, ref, update } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-database.js";
+import { getAuth, GoogleAuthProvider, signInWithRedirect } from 'https://www.gstatic.com/firebasejs/9.6.6/firebase-auth.js';
+import { getFirestore, collection, addDoc, getDocs, getDoc, onSnapshot, deleteDoc, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/9.6.6/firebase-firestore.js';
 // Crear usuario
-export function crearUsuario(email, password) {
-  const auth = firebase.auth();
+export function createUser(email, password) {
+  const auth = getAuth();
   return auth.createUserWithEmailAndPassword(email, password);
 }
 
 // Login
 export function ingresarEmail(email, password) {
-  const auth = firebase.auth();
-  return auth.signInWithEmailAndPassword(email, password); 
+  const auth = getAuth();
+  return auth.signInWithEmailAndPassword(email, password);
 }
 
 // Ingresar con Google
 export function ingresarConGoogle() {
-  const provider = new firebase.auth.GoogleAuthProvider();
-  return firebase.auth().signInWithPopup(provider);
+  const provider = new GoogleAuthProvider();
+  const auth = getAuth();
+  return signInWithRedirect(auth, provider);
 }
 
 // Enviar correo para verificacion
 export function enviarEmail() {
-  const auth = firebase.auth();
+  const auth = getAuth();
   return auth.currentUser.sendEmailVerification();
 }
-// en Estado de autenticación cambiado
-export const onAuthStateChanged = (callback) => firebase.auth().onAuthStateChanged(callback);
-// desconectar
-export const signOut = () => firebase.auth().signOut();
 
-//FIRESTORE 
+/* ---------------- COMANDOS PARA CLOUD FIRESTORE -----------------  */
+// Pruebas Fazt
+// const db = getFirestore();
+// guardamos la coleccion en la base de datos
 
-export function addDataUser(usuario) {
-  const db = firebase.firestore();
-  let nameRegister = 0;
-  let photoRegister = '';
-  if (usuario.displayName !== null && usuario.photoURL !== null) {
-    nameRegister = usuario.displayName;
-    photoRegister = usuario.photoURL;
-  }
-  return db.collection('users').add({
-    NameRegister: nameRegister,
-    EmailRegister: usuario.email,
-    IdUserActive: usuario.uid,
-    PhotoRegister: photoRegister,
-  });
+export const saveTask = (title, description) => {
+  const db = getFirestore();
+  addDoc(collection(db, 'tasks'), { title, description }); // title, description son los campos que estoy guardando en firebase
+};
+
+// obtenemos la coleccion de la base de datos
+export const getTasks = () => getDocs(collection(getFirestore(), 'tasks'));
+
+// Evento  cuando se obtenga la coleccion de la base de datos
+export const onGetTasks = (callback) => onSnapshot(collection(getFirestore(), 'tasks'), callback);
+
+// Eliminar el documento
+export const deleteTask = (id) => deleteDoc(doc(getFirestore(), 'tasks', id));
+
+// Obtener el documento a borrar
+export const getTask = (id) => getDoc(doc(getFirestore(), 'tasks', id));
+
+// actualizar datos
+export const updateTask = (id, newFields) => updateDoc(doc(getFirestore(), 'tasks', id), newFields);
+
+// Obteniendo la data de la colleccion "posts" en tiempo real
+export async function onSnapshotPosts() {
+  // const db = getFirestore();
+  // return db.collection('tasks').get();
+  return getDocs(collection(getFirestore(), 'tasks'));
 }
 
-// Agregando a la coleccion "users" data que el usuario ingrese al momento de registrarse con correo
-export function addDataUserCorreo(name, email, user) {
-  const db = firebase.firestore();
-  return db.collection('users').add({
-    NameRegister: name,
-    EmailRegister: email,
-    IdUserActive: user.uid,
-    PhotoRegister: 'img/userPhoto-default.png',
-  });
+// BLOQUE CORRIENDO
+export const saveTask2 = (Post) => {
+  const db = getFirestore();
+  addDoc(collection(db, 'posts'), { Post });
+};
+
+// obtenemos la coleccion de la base de datos
+export const getTasks2 = () => getDocs(collection(getFirestore(), 'posts'));
+
+// Evento  cuando se obtenga la coleccion de la base de datos
+export const onGetTasks2 = (callback) => onSnapshot(collection(getFirestore(), 'posts'), callback);
+
+// Eliminar el documento
+export const deleteTask2 = (id) => deleteDoc(doc(getFirestore(), 'posts', id));
+
+// Obtener el documento a borrar
+export const getTask2 = (id) => getDoc(doc(getFirestore(), 'posts', id));
+
+// actualizar datos
+export const updateTask2 = (id, newFields) => updateDoc(doc(getFirestore(), 'posts', id), newFields);
+
+// Obteniendo la data de la colleccion "posts" en tiempo real
+export async function onSnapshotPosts2() {
+  // const db = getFirestore();
+  // return db.collection('tasks').get();
+  return getDocs(collection(getFirestore(), 'posts'));
 }
