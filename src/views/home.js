@@ -2,7 +2,7 @@
 // import { getAuth } from "https://www.gstatic.com/firebasejs/9.6.6/firebase-auth.js";
 // import {getFirestore, collection, addDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js";
 import { navBarTemplate } from './navBar.js';
-import { saveTask, getTask, onGetTasks, deleteTask, updateTask, saveTask2, getTask2, onGetTasks2, deleteTask2, updateTask2 } from './firebase.js';
+import { saveTask, getTask, onGetTasks, deleteTask, updateTask } from './firebase.js';
 // import { db, auth } from './main.js';
 
 export default () => {
@@ -11,14 +11,16 @@ export default () => {
   divElement.setAttribute('id', 'containerInicio');
   divElement.innerHTML = viewHome;
   divElement.innerHTML += `
-  <form id="task-form">
-    <label for="title">Title</label>
-    <input type="text" placeholder="Task Title" id="task-title">
-    <label for="description">Description:</label>
-    <textarea id="task-description" row="3" placeholder="Task Description"></textarea>
-    <button id="btn-task-save">Save</button>
+  <form id="bloquePost">
+    <div id="escribirPost">
+      <label for="postear">Postear</label>
+      <textarea id="text-ToPost" class="textToPost" placeholder="¿Que quieres compartir?"></textarea>
+      <div id= "icons">
+          <button id="shareButton">Compartir</button>
+      </div>
+    </div>
   </form>
-  <div id="tasks-container"></div>
+  <div id="tablaInicio"></div>
   <hr>
   
   <section id="pantallaView">
@@ -54,21 +56,21 @@ export default () => {
     </section>
   </section>
   <hr>
+  </section>
       BLOQUE CORRIENDO
-    <form id="bloquePost">
-      <section id="escribirPost">
-        <label for="postear">Postear</label>
-        <textarea id="text-ToPost" class="textToPost" placeholder="¿Que quieres compartir?"></textarea>
-        <div id= "icons">
-          <button id="shareButton">Compartir</button>
-        </div>
-      </section>
-      <section id="sectionPosts">
-          <table id="tablaInicio"></table>
+    <div id="">
+      <div id="">
+        
+        
+        
+      </div>
+      <div id=""></div>
+      <div id="sectionPosts">
+          
           <table id="tablaPosts"></table>
-      </section>
-    </form>
-    </section>`;
+      </div>
+    </div>
+    `;
 
   // Templates de publicaciones
   function postTemplate(photoUser, nameUser, datePublication,
@@ -110,10 +112,10 @@ export default () => {
     return tabla;
   }
 
-  const taskForm = divElement.querySelector('#task-form');
-  const taskContainer = divElement.querySelector('#tasks-container');
-  const bloquePost = divElement.querySelector('#bloquePost');
-  const tablaPosts = divElement.querySelector('#tablaInicio');
+  const taskForm = divElement.querySelector('#bloquePost');
+  const taskContainer = divElement.querySelector('#tablaInicio');
+  // const bloquePost = divElement.querySelector('#bloquePost');
+  // const tablaPosts = divElement.querySelector('#tablaInicio');
   let editStatus = false;
   let id = '';
   // console.log(taskContainer);
@@ -122,11 +124,10 @@ export default () => {
     onGetTasks((querySnapshot) => {
       let html = '';
       querySnapshot.forEach((doc) => {
-        const task = doc.data();
+        const post = doc.data();
         html += `
           <div>
-            <p>${task.title}</p>
-            <p>${task.description}</p>
+            <p>${post.Post}</p>
             <button class='btn-delete' data-id='${doc.id}'>Delete</button>
             <button class='btn-edit' data-id='${doc.id}'>Update</button>
           </div>`;
@@ -148,11 +149,9 @@ export default () => {
           // console.log(event.target.dataset.id);
           // console.log(dataset.id);
           const doc = await getTask(e.target.dataset.id);
-          const task = doc.data();
+          const post = doc.data();
           console.log(doc.data());
-          taskForm['task-title'].value = task.title;
-          taskForm['task-description'].value = task.description;
-
+          taskForm['text-ToPost'].value = post.Post;
           editStatus = true;
           id = doc.id;
         });
@@ -164,29 +163,31 @@ export default () => {
   // GUARDAR DATOS
   taskForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const title = taskForm['task-title'];
-    const description = taskForm['task-description'];
+    const post = taskForm['text-ToPost'];
     if (!editStatus) {
-      saveTask(title.value, description.value);
+      saveTask(post.value);
     } else {
-      updateTask(id, { title: title.value, description: description.value });
+      updateTask(id, { Post: post.value });
       editStatus = false;
     }
     taskForm.reset();
     // console.log(taskContainer);
     showPosts();
   });
+  
+  return divElement;
+};
 
+/*
   // LISTAR LOS DATOS EN LA PAGINA
   window.addEventListener('load', async () => {
     onGetTasks((querySnapshot) => {
       let html = '';
       querySnapshot.forEach((doc) => {
-        const task = doc.data();
+        const post = doc.data();
         html += `
           <div>
-            <p>${task.title}</p>
-            <p>${task.description}</p>
+            <p>${post.Post}</p>
             <button class='btn-delete' data-id='${doc.id}'>Delete</button>
           </div>`;
       });
@@ -194,78 +195,6 @@ export default () => {
     });
   });
 
-  // CODIGO PARA EL POST
-  const showPosts2 = () => {
-    onGetTasks2((querySnapshot) => {
-      let html = '';
-      querySnapshot.forEach((doc) => {
-        const post = doc.data();
-        html += `
-        <div>
-        <p>${post.Post}</p>
-        <button class='btn-delete2' data-id='${doc.id}'>Delete</button>
-        <button class='btn-edit2' data-id='${doc.id}'>Update</button>
-      </div>`;
-      });
-      tablaPosts.innerHTML = html;
-
-      const btnsDelete2 = tablaPosts.querySelectorAll('.btn-delete2');
-      btnsDelete2.forEach((btn) => {
-        btn.addEventListener('click', ({ target: { dataset } }) => {
-          // console.log(event.target.dataset.id);
-          // console.log(dataset.id);
-          deleteTask2(dataset.id);
-        });
-      });
-
-      const btnsEdit2 = tablaPosts.querySelectorAll('.btn-edit2');
-      btnsEdit2.forEach((btn) => {
-        btn.addEventListener('click', async (e) => {
-          // console.log(event.target.dataset.id);
-          // console.log(dataset.id);
-          const doc = await getTask2(e.target.dataset.id);
-          const post = doc.data();
-          // console.log(doc.data());
-          bloquePost['text-ToPost'].value = post.Post;
-          editStatus = true;
-          id = doc.id;
-        });
-      });
-    });
-  };
-  showPosts2();
-
-  // GUARDAR DATOS
-  bloquePost.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const post = bloquePost['text-ToPost'];
-    if (!editStatus) {
-      saveTask2(post.value);
-    } else {
-      updateTask2(id, { Post: post.value });
-      editStatus = false;
-    }
-    bloquePost.reset();
-    // console.log(taskContainer);
-    showPosts2();
-  });
-
-  // LISTAR LOS DATOS EN LA PAGINA
-  window.addEventListener('load', async () => {
-    onGetTasks2((querySnapshot) => {
-      let html = '';
-      querySnapshot.forEach((doc) => {
-        const post = doc.data();
-        html += `
-          <div>
-            <p>${post.Post}</p>
-            <button class='btn-delete2' data-id='${doc.id}'>Delete</button>
-          </div>`;
-      });
-      tablaPosts.innerHTML = html;
-    });
-  });
-  /*
   // Mostrar todos los posts de la colección
   const tabla = divElement.querySelector('#tablaPosts');
   // const x = onSnapshotPosts();
@@ -276,6 +205,4 @@ export default () => {
       console.log(doc.data());
     });
   });
-*/
-  return divElement;
-};
+  */

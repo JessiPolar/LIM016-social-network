@@ -32,33 +32,34 @@ export function enviarEmail() {
 // const db = getFirestore();
 // guardamos la coleccion en la base de datos
 
-export const saveTask = (title, description) => {
+export const saveTask = (Post) => {
   const db = getFirestore();
-  addDoc(collection(db, 'tasks'), { title, description }); // title, description son los campos que estoy guardando en firebase
+  addDoc(collection(db, 'posts'), { Post }); // title, description son los campos que estoy guardando en firebase
 };
 
 // obtenemos la coleccion de la base de datos
-export const getTasks = () => getDocs(collection(getFirestore(), 'tasks'));
+export const getTasks = () => getDocs(collection(getFirestore(), 'posts'));
 
 // Evento  cuando se obtenga la coleccion de la base de datos
-export const onGetTasks = (callback) => onSnapshot(collection(getFirestore(), 'tasks'), callback);
+export const onGetTasks = (callback) => onSnapshot(collection(getFirestore(), 'posts'), callback);
 
 // Eliminar el documento
-export const deleteTask = (id) => deleteDoc(doc(getFirestore(), 'tasks', id));
+export const deleteTask = (id) => deleteDoc(doc(getFirestore(), 'posts', id));
 
 // Obtener el documento a borrar
-export const getTask = (id) => getDoc(doc(getFirestore(), 'tasks', id));
+export const getTask = (id) => getDoc(doc(getFirestore(), 'posts', id));
 
 // actualizar datos
-export const updateTask = (id, newFields) => updateDoc(doc(getFirestore(), 'tasks', id), newFields);
-
+export const updateTask = (id, newFields) => updateDoc(doc(getFirestore(), 'posts', id), newFields);
+/*
 // Obteniendo la data de la colleccion "posts" en tiempo real
 export async function onSnapshotPosts() {
   // const db = getFirestore();
   // return db.collection('tasks').get();
-  return getDocs(collection(getFirestore(), 'tasks'));
+  return getDocs(collection(getFirestore(), 'posts'));
 }
-
+*/
+/*
 // BLOQUE CORRIENDO
 export const saveTask2 = (Post) => {
   const db = getFirestore();
@@ -86,3 +87,4 @@ export async function onSnapshotPosts2() {
   // return db.collection('tasks').get();
   return getDocs(collection(getFirestore(), 'posts'));
 }
+*/
